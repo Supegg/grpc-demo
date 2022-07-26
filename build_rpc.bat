@@ -1,0 +1,1 @@
+packages\Grpc.Tools.2.47.0\tools\windows_x86\protoc.exe -IgRpcModel --csharp_out gRpcModel  gRpcModel\greet.proto --grpc_out gRpcModel --plugin=protoc-gen-grpc=packages\Grpc.Tools.2.47.0\tools\windows_x86\grpc_csharp_plugin.exe
