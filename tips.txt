@@ -1,0 +1,80 @@
+protobuf 应用三部曲
+    创建.proto文件，定义数据结构
+    编译.proto文件
+    调用接口实现序列化、反序列化
+
+
+message xxx {
+  // 字段规则：required -> 字段只能也必须出现 1 次
+  // 字段规则：optional -> 字段可出现 0 次或1次
+  // 字段规则：repeated -> 字段可出现任意多次（包括 0）
+  // 类型：int32、int64、sint32、sint64、string、32-bit ....
+  // 字段编号：0 ~ 536870911（除去 19000 到 19999 之间的数字）
+  字段规则 类型 名称 = 字段编号;
+}
+
+---------------------------------------------------------------------
+
+---------------------------------------------------------------------
+// protobuf 预定义类型，参照设计自定义消息类型
+// packages\Grpc.Tools.2.47.0\build\native\include\google\protobuf
+
+---------------------------------------------------------------------
+syntax = "proto3"; // 协议版本
+
+package google.protobuf; // 包名
+
+// 可选，映射的 c# namespace
+option csharp_namespace = "Google.Protobuf.WellKnownTypes"; 
+option java_package = "com.google.protobuf"; // 映射的 Java 包名
+
+---------------------------------------------------------------------
+// A generic empty message that you can re-use to avoid defining duplicated
+// empty messages in your APIs. A typical example is to use it as the request
+// or the response type of an API method. For instance:
+//
+//     service Foo {
+//       rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty);
+//     }
+//
+// The JSON representation for `Empty` is empty JSON object `{}`.
+message Empty {} // 对应void, 即无需传入/传出参数
+
+
+---------------------------------------------------------------------
+import "google/protobuf/any.proto"; // 引用预定义类型
+
+message Stock {
+    // Stock-specific data
+}
+
+message Currency {
+    // Currency-specific data
+}
+
+message ChangeNotification {
+    int32 id = 1; 
+    // Any 相当于 object 任意对象
+    // 编码时，通常先判断类型，再拆包
+    google.protobuf.Any instrument = 2;
+}
+
+// Unpack 过程
+public void FormatChangeNotification(ChangeNotification change)
+{
+    if (change.Instrument.Is(Stock.Descriptor))
+    {
+        FormatStock(change.Instrument.Unpack<Stock>());
+    }
+    else if (change.Instrument.Is(Currency.Descriptor))
+    {
+        FormatCurrency(change.Instrument.Unpack<Currency>());
+    }
+    else
+    {
+        throw new ArgumentException("Unknown instrument type");
+    }
+}
+
+---------------------------------------------------------------------
+

@@ -6,6 +6,16 @@ protocol buffers 是一种语言无关、平台无关、可扩展的序列化结
 
 [gRPC](https://github.com/grpc/grpc)支持多种语言，并能够基于语言自动生成客户端和服务端功能库。目前，在GitHub上已 C++, Python, Ruby, Objective-C, PHP, C#)等语言。
 
+## protobuf数据和编码
+
+protobuf数据类型有四种 `Varint、64-bit、Length-delimited、32-bit`，`Start group` 和 `End group` 已废弃。
+
+![protobuf_datatypes](protobuf_datatypes.png)
+![protobuf_datatypes2](protobuf_datatypes2.png)
+
+protobuf编码结构图，采用 `message -> field -> (Tag-[Length-]Value)`模式编码
+![protobuf编码结构图](protobuf_encoding.png)
+
 ## dotnet Framework开发
 
 ### 模型开发
@@ -94,10 +104,20 @@ channel.ShutdownAsync().Wait();
 
 ```
 
-### 后记
+## 后记
+
+XML、JSON、ProtoBuf 三者比较
+
+* XML、JSON、ProtoBuf 都具有数据结构化和数据序列化的能力
+* XML、JSON 更注重数据结构化，关注人类可读性和语义表达能力。ProtoBuf 更注重数据序列化，关注效率、空间、速度，人类可读性差，语义表达能力不足（为保证极致的效率，会舍弃一部分元信息）
+* ProtoBuf 的应用场景更为明确，XML、JSON 的应用场景更为丰富。
+
 
 参考 [gRPC C#学习](https://www.cnblogs.com/linezero/p/grpc.html)
 
 [ProtoBuf介绍](https://www.jianshu.com/p/a24c88c0526a)
 
 [gRPC](https://github.com/grpc/grpc)是基于c的wrapper库，开发者已全面转向net原生的[grpc-dotnet](https://github.com/grpc/grpc-dotnet)开发。
+
+[Google's protocol-buffers](https://developers.google.com/protocol-buffers/docs/overview)
+[Microsoft's gRPC概叙](https://docs.microsoft.com/zh-cn/dotnet/architecture/grpc-for-wcf-developers/grpc-overview)
